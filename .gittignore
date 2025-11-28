@@ -1,0 +1,12 @@
+# Gereksiz kütüphane dosyaları (Bunlar çok ağır, yüklenmez)
+node_modules/
+/backend/node_modules/
+/frontend/node_modules/
+
+# Şifrelerin olduğu dosyalar (ASLA YÜKLENMEZ!)
+.env
+.DS_Store
+
+# Derleme çıktıları
+dist/
+build/

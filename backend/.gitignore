@@ -1,0 +1,13 @@
+# Node modülleri
+node_modules/
+
+# Ortam değişkenleri (ŞİFRELER BURADA!)
+.env
+
+# Log dosyaları
+*.log
+npm-debug.log*
+
+# OS dosyaları
+.DS_Store
+Thumbs.db
