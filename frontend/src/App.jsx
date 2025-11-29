@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import axios from 'axios';
+
+// Sayfalarımızı içeri alıyoruz (Import)
+import Wallet from './pages/Wallet';
 import Reservation from './pages/Reservation';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
 
+// Home (Ana Sayfa) bileşeni
 function Home() {
     const [movies, setMovies] = useState([]);
     useEffect(() => {
@@ -17,7 +21,7 @@ function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
                 {movies.map(movie => (
                     <div key={movie.movie_id} className="bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl hover:-translate-y-2 transition duration-500">
-                        <img src={movie.poster_url} className="w-full h-[450px] object-cover" />
+                        <img src={movie.poster_url} className="w-full h-[450px] object-cover" alt={movie.title} />
                         <div className="p-6">
                             <h3 className="text-2xl font-bold text-white mb-2">{movie.title}</h3>
                             <Link to={`/reservation/${movie.movie_id}`} className="block w-full bg-red-600 text-white text-center py-3 rounded-xl font-bold mt-4">BİLET AL</Link>
@@ -37,12 +41,14 @@ export default function App() {
                     <Link to="/" className="text-3xl font-black text-red-600">ULTRA SİNEMA</Link>
                     <nav className="flex gap-4">
                         <Link to="/" className="hover:text-red-500 transition">Ana Sayfa</Link>
+                        <Link to="/wallet" className="text-green-400 hover:text-green-300 transition font-bold">Cüzdanım</Link>
                         <Link to="/login" className="bg-white/10 px-4 py-2 rounded hover:bg-white/20 transition">Yönetici Girişi</Link>
                     </nav>
                 </header>
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/reservation/:id" element={<Reservation />} />
+                    <Route path="/wallet" element={<Wallet />} />
                     <Route path="/admin" element={<Admin />} />
                     <Route path="/login" element={<Login />} />
                 </Routes>

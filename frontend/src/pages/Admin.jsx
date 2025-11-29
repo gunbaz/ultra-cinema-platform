@@ -5,12 +5,18 @@ import axios from 'axios';
 export default function Admin() {
     const [stats, setStats] = useState({ totalIncome: 0, totalTickets: 0, totalMovies: 0 });
     const [movies, setMovies] = useState([]);
-    const [formData, setFormData] = useState({
-        title: '', description: '', duration_minutes: '', poster_url: '', language: '', age_restriction: ''
-    });
+
+    // Form state'i artık release_date ve imdb_rating'i de tutuyor (hidden fields gibi davranacaklar)
+    const initialFormState = {
+        title: '', description: '', duration_minutes: '', poster_url: '', language: '', age_restriction: '',
+        release_date: '', imdb_rating: 0
+    };
+    const [formData, setFormData] = useState(initialFormState);
+    const [editingMovie, setEditingMovie] = useState(null); // Düzenlenen film
+    const [backupLoading, setBackupLoading] = useState(false);
+
     const navigate = useNavigate();
 
-    // Token Kontrolü ve Veri Çekme
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -24,7 +30,7 @@ export default function Admin() {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             const statsRes = await axios.get('http://localhost:5000/api/admin/stats', config);
-            const moviesRes = await axios.get('http://localhost:5000/api/movies'); // Bu public
+            const moviesRes = await axios.get('http://localhost:5000/api/movies');
             setStats(statsRes.data.stats);
             setMovies(moviesRes.data.data);
         } catch (err) {
@@ -40,18 +46,49 @@ export default function Admin() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleAddMovie = async (e) => {
+    // Düzenle butonuna basılınca
+    const handleEditClick = (movie) => {
+        setEditingMovie(movie);
+        setFormData({
+            title: movie.title,
+            description: movie.description,
+            duration_minutes: movie.duration_minutes,
+            poster_url: movie.poster_url,
+            language: movie.language,
+            age_restriction: movie.age_restriction,
+            release_date: movie.release_date, // Mevcut değeri koru
+            imdb_rating: movie.imdb_rating    // Mevcut değeri koru
+        });
+        // Sayfanın en üstüne (forma) kaydır
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleCancelEdit = () => {
+        setEditingMovie(null);
+        setFormData(initialFormState);
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
+        const config = { headers: { Authorization: `Bearer ${token}` } };
+
         try {
-            await axios.post('http://localhost:5000/api/admin/movies', formData, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            alert('Film Eklendi!');
-            setFormData({ title: '', description: '', duration_minutes: '', poster_url: '', language: '', age_restriction: '' });
+            if (editingMovie) {
+                // GÜNCELLEME (PUT)
+                await axios.put(`http://localhost:5000/api/admin/movies/${editingMovie.movie_id}`, formData, config);
+                alert('Film Güncellendi!');
+            } else {
+                // EKLEME (POST)
+                await axios.post('http://localhost:5000/api/admin/movies', formData, config);
+                alert('Film Eklendi!');
+            }
+
+            // Başarılı işlem sonrası temizlik
+            handleCancelEdit();
             fetchData(token);
         } catch (err) {
-            alert('Hata: ' + err.message);
+            alert('İşlem Hatası: ' + (err.response?.data?.message || err.message));
         }
     };
 
@@ -65,6 +102,21 @@ export default function Admin() {
             fetchData(token);
         } catch (err) {
             alert('Silme Hatası: ' + err.message);
+        }
+    };
+
+    const handleBackup = async () => {
+        setBackupLoading(true);
+        const token = localStorage.getItem('token');
+        try {
+            const res = await axios.get('http://localhost:5000/api/admin/backup', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            alert(`Yedekleme Başarıyla Tamamlandı!\nDosya Adı: ${res.data.fileName}`);
+        } catch (err) {
+            alert('Yedekleme Hatası: ' + (err.response?.data?.message || err.message));
+        } finally {
+            setBackupLoading(false);
         }
     };
 
@@ -106,11 +158,32 @@ export default function Admin() {
                     </div>
                 </div>
 
+                {/* Backup Button */}
+                <div className="mb-10 flex justify-end">
+                    <button
+                        onClick={handleBackup}
+                        disabled={backupLoading}
+                        className="flex items-center justify-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {backupLoading ? (
+                            <>
+                                <span className="animate-spin text-xl">↻</span> Yedekleniyor...
+                            </>
+                        ) : (
+                            <>
+                                <span className="text-xl">💾</span> VERİTABANINI YEDEKLE
+                            </>
+                        )}
+                    </button>
+                </div>
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                    {/* Add Movie Form */}
+                    {/* Add/Edit Movie Form */}
                     <div className="bg-gray-800 p-8 rounded-xl border border-gray-700">
-                        <h3 className="text-xl font-bold mb-6 border-b border-gray-700 pb-2">Yeni Film Ekle</h3>
-                        <form onSubmit={handleAddMovie} className="space-y-4">
+                        <h3 className="text-xl font-bold mb-6 border-b border-gray-700 pb-2">
+                            {editingMovie ? 'Filmi Düzenle' : 'Yeni Film Ekle'}
+                        </h3>
+                        <form onSubmit={handleSubmit} className="space-y-4">
                             <input type="text" name="title" placeholder="Film Adı" value={formData.title} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none" required />
                             <input type="text" name="poster_url" placeholder="Afiş URL" value={formData.poster_url} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none" required />
                             <div className="grid grid-cols-2 gap-4">
@@ -119,7 +192,17 @@ export default function Admin() {
                             </div>
                             <input type="text" name="language" placeholder="Dil" value={formData.language} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none" required />
                             <textarea name="description" placeholder="Açıklama" value={formData.description} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none h-24"></textarea>
-                            <button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded transition">KAYDET</button>
+
+                            <div className="flex gap-4">
+                                <button type="submit" className={`flex-1 font-bold py-3 rounded transition ${editingMovie ? 'bg-blue-600 hover:bg-blue-700' : 'bg-red-600 hover:bg-red-700'}`}>
+                                    {editingMovie ? 'GÜNCELLE' : 'KAYDET'}
+                                </button>
+                                {editingMovie && (
+                                    <button type="button" onClick={handleCancelEdit} className="px-6 py-3 bg-gray-600 hover:bg-gray-500 rounded font-bold transition">
+                                        İPTAL
+                                    </button>
+                                )}
+                            </div>
                         </form>
                     </div>
 
@@ -136,7 +219,10 @@ export default function Admin() {
                                             <p className="text-xs text-gray-400">{movie.duration_minutes} dk | {movie.language}</p>
                                         </div>
                                     </div>
-                                    <button onClick={() => handleDeleteMovie(movie.movie_id)} className="bg-red-500/20 text-red-500 hover:bg-red-500 hover:text-white px-3 py-1 rounded text-sm transition">Sil</button>
+                                    <div className="flex gap-2">
+                                        <button onClick={() => handleEditClick(movie)} className="bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white px-3 py-1 rounded text-sm transition">Düzenle</button>
+                                        <button onClick={() => handleDeleteMovie(movie.movie_id)} className="bg-red-500/20 text-red-500 hover:bg-red-500 hover:text-white px-3 py-1 rounded text-sm transition">Sil</button>
+                                    </div>
                                 </div>
                             ))}
                         </div>

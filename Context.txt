@@ -1,0 +1,141 @@
+🎬 PROJE BAĞLAMI: Ultra Cinema Platform (Full Stack)
+
+Proje Sahibi: Furkan Günbaz & Enes Cabbar Akça
+Amaç: Üniversite Veritabanı Yönetim Sistemleri dersi için geliştirilmiş, CV niteliğinde profesyonel sinema bilet rezervasyon ve yönetim sistemi.
+GitHub: https://github.com/gunbaz/ultra-cinema-platform
+
+🛠️ 1. Teknoloji Yığını (Tech Stack)
+
+Frontend: React.js (Vite), Tailwind CSS, React Router DOM, Axios.
+
+Backend: Node.js, Express.js.
+
+Veritabanı: PostgreSQL (Relational DB).
+
+Güvenlik: JWT (JSON Web Token), Bcrypt (Şifreleme).
+
+Veritabanı Yönetimi: pg (node-postgres) kütüphanesi, DBeaver (GUI).
+
+🗄️ 2. Veritabanı Mimarisi (Database Schema)
+
+Veritabanı 3. Normal Form (3NF) kurallarına göre tasarlanmış CinemaDB isimli veritabanıdır.
+
+Tablolar ve İlişkiler:
+
+Roles: Kullanıcı yetkileri (ID: 1 -> Müşteri, ID: 2 -> Super Admin).
+
+Users: Kullanıcı bilgileri. role_id ile Roles tablosuna bağlı. Şifreler password_hash olarak tutulur.
+
+Movies: Film detayları (title, description, duration_minutes, poster_url, imdb_rating, release_date). release_date zorunludur.
+
+Cities, Cinemas, Halls: Lokasyon ve salon hiyerarşisi.
+
+Seats: Salonun koltuk haritası (row_label, seat_number).
+
+Sessions: Hangi filmin, hangi salonda, ne zaman oynadığı.
+
+Tickets: Satılan biletler. user_id, session_id ve seat_id ile ilişkilidir.
+
+🔌 3. Backend Mimarisi (API Endpoints)
+
+Tüm backend mantığı tek bir backend/server.js dosyasında toplanmıştır (Monolithic yapı).
+
+Müşteri Rotaları (Public):
+
+GET /api/movies: Vizyondaki tüm filmleri listeler (Tarihe göre sıralı).
+
+GET /api/movies/:id: Tek bir filmin detayını getirir.
+
+GET /api/seats/:movieId: O filme ait DOLU (Satılmış) koltukları getirir (Örn: ['A1', 'B2']).
+
+POST /api/tickets: Bilet satın alma işlemi.
+
+İşleyiş: Seçilen koltukları döngüye alır, önce seat_id ve session_id bulunur, sonra Tickets tablosuna INSERT yapılır.
+
+Yönetici Rotaları (Protected - JWT Required):
+
+POST /api/admin/login: Admin girişi.
+
+İşleyiş: E-posta ile kullanıcıyı bulur (Roles tablosu ile JOIN yaparak), Bcrypt ile şifreyi doğrular, 1 saatlik JWT Token döner.
+
+GET /api/admin/stats: Dashboard verileri (Toplam Hasılat, Satılan Bilet, Film Sayısı).
+
+POST /api/admin/movies: Yeni film ekleme.
+
+Not: release_date veritabanında zorunlu olduğu için backend otomatik olarak NOW() basar.
+
+DELETE /api/admin/movies/:id: Film silme.
+
+Middleware:
+
+authenticateToken: Gelen istekte "Bearer Token" olup olmadığını ve geçerliliğini kontrol eder. Geçersizse 401/403 döner.
+
+🎨 4. Frontend Mimarisi (React)
+
+Tasarım dili: Netflix-Style (Koyu Tema, Kırmızı Aksentler).
+
+Sayfalar (src/pages):
+
+Home.jsx (Ana Sayfa):
+
+Filmleri Grid yapısında listeler.
+
+Poster, IMDB puanı ve "Bilet Al" butonu içerir.
+
+Reservation.jsx (Koltuk Seçimi):
+
+URL'den film ID'sini alır.
+
+Backend'den dolu koltukları çeker ve Kırmızı yapar.
+
+Kullanıcı boş koltukları seçip (Yeşil), ödeme yapabilir.
+
+Login.jsx (Admin Girişi):
+
+E-posta ve Şifre formu. Başarılı girişte Token'ı localStorage'a kaydeder.
+
+Admin.jsx (Yönetim Paneli):
+
+Dashboard: İstatistik kartlarını gösterir.
+
+Film Ekle: Form üzerinden veritabanına film ekler.
+
+Film Listesi: Mevcut filmleri listeler ve silme imkanı tanır.
+
+Güvenlik: Token yoksa kullanıcıyı otomatik /login sayfasına atar.
+
+🐛 5. Çözülen Kritik Sorunlar (Geçmiş)
+
+Admin Giriş Hatası (400/500):
+
+Sorun: Backend, token oluştururken user.role verisine erişemiyordu çünkü SQL sorgusu Roles tablosunu JOIN etmiyordu.
+
+Çözüm: Login SQL sorgusu JOIN Roles içerecek şekilde güncellendi.
+
+Hatalı Şifre (Hash):
+
+Sorun: Veritabanına manuel eklenen admin şifresi, bcrypt formatında değildi.
+
+Çözüm: Geçici bir rota (/api/tools/create-admin) ile şifre (123456) kod tarafında hashlenerek veritabanı güncellendi.
+
+Film Eklerken 500 Hatası:
+
+Sorun: Veritabanındaki release_date (Not Null) alanı, formdan gönderilmediği için hata veriyordu.
+
+Çözüm: Backend koduna INSERT işleminde otomatik NOW() eklendi.
+
+Koltukların Kaydedilmemesi:
+
+Sorun: user_id alanı boş gidiyordu (Hayalet Müşteri).
+
+Çözüm: Veritabanına ID'si 1 olan varsayılan bir müşteri eklendi ve Backend bu ID'yi kullanmaya ayarlandı.
+
+🚀 6. Mevcut Durum
+
+Proje şu an Localhost üzerinde tam fonksiyonel olarak çalışmaktadır.
+
+Admin: admin@ultra.com / 123456
+
+Müşteri: Arayüz üzerinden bilet alabilir, koltuk durumları anlık güncellenir.
+
+Veri: Filmler, koltuklar ve satışlar PostgreSQL veritabanında kalıcıdır.
