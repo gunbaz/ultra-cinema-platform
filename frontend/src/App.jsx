@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { API_URL } from './config/api';
 
 // Sayfalarımızı içeri alıyoruz (Import)
 import Wallet from './pages/Wallet';
@@ -15,7 +16,7 @@ import AdminRoute from './components/AdminRoute';
 function Home() {
     const [movies, setMovies] = useState([]);
     useEffect(() => {
-        axios.get('http://localhost:5000/api/movies').then(res => setMovies(res.data.data));
+        axios.get(`${API_URL}/api/movies`).then(res => setMovies(res.data.data));
     }, []);
 
     return (

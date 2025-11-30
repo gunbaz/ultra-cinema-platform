@@ -11,18 +11,26 @@ require('dotenv').config();
 
 // --- VERİTABANI BAĞLANTISI (En üste taşındı) ---
 const pool = new Pool({
-    user: 'postgres',
+    user: process.env.DB_USER || 'postgres',
     host: process.env.DB_HOST || 'localhost',
-    database: 'CinemaDB',
+    database: process.env.DB_NAME || 'CinemaDB',
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT || 5432,
+    // Bulut veritabanları için SSL desteği
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
 });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_key_123';
 
-app.use(cors());
+// CORS ayarları - Deploy için güncellendi
+app.use(cors({
+    origin: process.env.FRONTEND_URL || '*', // Geliştirme aşamasında her yerden, production'da belirli domain
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Detaylı Loglama

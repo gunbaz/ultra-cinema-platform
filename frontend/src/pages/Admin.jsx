@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config/api';
 
 export default function Admin() {
     const [stats, setStats] = useState({ totalIncome: 0, totalTickets: 0, totalMovies: 0 });
@@ -27,8 +28,8 @@ export default function Admin() {
     const fetchData = async (token) => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const statsRes = await axios.get('http://localhost:5000/api/admin/stats', config);
-            const moviesRes = await axios.get('http://localhost:5000/api/movies');
+            const statsRes = await axios.get(`${API_URL}/api/admin/stats`, config);
+            const moviesRes = await axios.get(`${API_URL}/api/movies`);
             setStats(statsRes.data.stats);
             setMovies(moviesRes.data.data);
         } catch (err) {
@@ -74,11 +75,11 @@ export default function Admin() {
         try {
             if (editingMovie) {
                 // GÜNCELLEME (PUT)
-                await axios.put(`http://localhost:5000/api/admin/movies/${editingMovie.movie_id}`, formData, config);
+                await axios.put(`${API_URL}/api/admin/movies/${editingMovie.movie_id}`, formData, config);
                 alert('Film Güncellendi!');
             } else {
                 // EKLEME (POST)
-                await axios.post('http://localhost:5000/api/admin/movies', formData, config);
+                await axios.post(`${API_URL}/api/admin/movies`, formData, config);
                 alert('Film Eklendi!');
             }
 
@@ -94,7 +95,7 @@ export default function Admin() {
         if (!confirm('Bu filmi silmek istediğinize emin misiniz?')) return;
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:5000/api/admin/movies/${id}`, {
+            await axios.delete(`${API_URL}/api/admin/movies/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchData(token);
@@ -107,7 +108,7 @@ export default function Admin() {
         setBackupLoading(true);
         const token = localStorage.getItem('token');
         try {
-            const res = await axios.get('http://localhost:5000/api/admin/backup', {
+            const res = await axios.get(`${API_URL}/api/admin/backup`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert(`Yedekleme Başarıyla Tamamlandı!\nDosya Adı: ${res.data.fileName}`);

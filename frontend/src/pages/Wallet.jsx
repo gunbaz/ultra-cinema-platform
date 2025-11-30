@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../config/api';
 
 export default function Wallet() {
     const [wallet, setWallet] = useState(null);
@@ -16,7 +17,7 @@ export default function Wallet() {
 
     const fetchWallet = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/wallet/${userId}`);
+            const res = await axios.get(`${API_URL}/api/wallet/${userId}`);
             setWallet(res.data.wallet);
         } catch (err) {
             console.error(err);
@@ -26,7 +27,7 @@ export default function Wallet() {
     const handleDeposit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/wallet/deposit', {
+            await axios.post(`${API_URL}/api/wallet/deposit`, {
                 userId,
                 amount: parseFloat(amount)
             });

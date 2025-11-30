@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config/api';
 
 function HomePage() {
     const [movies, setMovies] = useState([]);
@@ -15,7 +16,7 @@ function HomePage() {
     const fetchMovies = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('http://localhost:5000/api/movies');
+            const response = await axios.get(`${API_URL}/api/movies`);
 
             if (response.data.success) {
                 setMovies(response.data.data);

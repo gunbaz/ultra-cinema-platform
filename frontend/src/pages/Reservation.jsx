@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../config/api';
 
 const ROWS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const COLS = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -138,13 +139,13 @@ export default function Reservation() {
     useEffect(() => {
         if (!userId) return;
         
-        axios.get(`http://localhost:5000/api/movies/${id}`).then(res => setMovie(res.data.data));
-        axios.get(`http://localhost:5000/api/seats/${id}`).then(res => setOccupiedSeats(res.data.occupiedSeats || []));
-        axios.get(`http://localhost:5000/api/wallet/${userId}`).then(res => setWallet(res.data.wallet));
-        axios.get('http://localhost:5000/api/products').then(res => setProducts(res.data.data || []));
+        axios.get(`${API_URL}/api/movies/${id}`).then(res => setMovie(res.data.data));
+        axios.get(`${API_URL}/api/seats/${id}`).then(res => setOccupiedSeats(res.data.occupiedSeats || []));
+        axios.get(`${API_URL}/api/wallet/${userId}`).then(res => setWallet(res.data.wallet));
+        axios.get(`${API_URL}/api/products`).then(res => setProducts(res.data.data || []));
         
         // Yorumları yükle
-        axios.get(`http://localhost:5000/api/movies/${id}/reviews`)
+        axios.get(`${API_URL}/api/movies/${id}/reviews`)
             .then(res => {
                 setReviews(res.data.reviews || []);
                 setAverageRating(res.data.averageRating || 0);
@@ -194,7 +195,7 @@ export default function Reservation() {
 
         if (!confirm('Kredi Kartı ile ödemeyi onaylıyor musunuz?')) return;
         try {
-            await axios.post('http://localhost:5000/api/tickets', { movieId: id, selectedSeats });
+            await axios.post(`${API_URL}/api/tickets`, { movieId: id, selectedSeats });
             alert('Bilet Alındı! (Kredi Kartı)');
             navigate('/');
         } catch (err) {
@@ -236,7 +237,7 @@ export default function Reservation() {
         }));
 
         try {
-            const response = await axios.post('http://localhost:5000/api/tickets/buy-with-wallet', { 
+            const response = await axios.post(`${API_URL}/api/tickets/buy-with-wallet`, { 
                 userId, 
                 movieId: id, 
                 selectedSeats,
@@ -267,7 +268,7 @@ export default function Reservation() {
 
         setIsSubmittingReview(true);
         try {
-            await axios.post('http://localhost:5000/api/reviews', {
+            await axios.post(`${API_URL}/api/reviews`, {
                 userId,
                 movieId: id,
                 rating: userRating,
@@ -275,7 +276,7 @@ export default function Reservation() {
             });
 
             // Yorumları yeniden yükle
-            const res = await axios.get(`http://localhost:5000/api/movies/${id}/reviews`);
+            const res = await axios.get(`${API_URL}/api/movies/${id}/reviews`);
             setReviews(res.data.reviews || []);
             setAverageRating(res.data.averageRating || 0);
             setTotalReviews(res.data.totalReviews || 0);
