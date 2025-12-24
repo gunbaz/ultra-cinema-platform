@@ -7,13 +7,13 @@ export default function Admin() {
     const [stats, setStats] = useState({ totalIncome: 0, totalTickets: 0, totalMovies: 0 });
     const [movies, setMovies] = useState([]);
 
-    // Form state'i artÄ±k release_date ve imdb_rating'i de tutuyor (hidden fields gibi davranacaklar)
+    // Form state'i artık release_date ve imdb_rating'i de tutuyor (hidden fields gibi davranacaklar)
     const initialFormState = {
         title: '', description: '', duration_minutes: '', poster_url: '', language: '', age_restriction: '',
         release_date: '', imdb_rating: 0
     };
     const [formData, setFormData] = useState(initialFormState);
-    const [editingMovie, setEditingMovie] = useState(null); // DÃ¼zenlenen film
+    const [editingMovie, setEditingMovie] = useState(null); // Düzenlenen film
     const [backupLoading, setBackupLoading] = useState(false);
 
     const navigate = useNavigate();
@@ -45,7 +45,7 @@ export default function Admin() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    // DÃ¼zenle butonuna basÄ±lÄ±nca
+    // Düzenle butonuna basılınca
     const handleEditClick = (movie) => {
         setEditingMovie(movie);
         setFormData({
@@ -55,10 +55,10 @@ export default function Admin() {
             poster_url: movie.poster_url,
             language: movie.language,
             age_restriction: movie.age_restriction,
-            release_date: movie.release_date, // Mevcut deÄŸeri koru
-            imdb_rating: movie.imdb_rating    // Mevcut deÄŸeri koru
+            release_date: movie.release_date, // Mevcut değeri koru
+            imdb_rating: movie.imdb_rating    // Mevcut değeri koru
         });
-        // SayfanÄ±n en Ã¼stÃ¼ne (forma) kaydÄ±r
+        // Sayfanın en üstüne (forma) kaydır
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -74,25 +74,25 @@ export default function Admin() {
 
         try {
             if (editingMovie) {
-                // GÃœNCELLEME (PUT)
+                // GÜNCELLEME (PUT)
                 await axios.put(`${API_URL}/api/admin/movies/${editingMovie.movie_id}`, formData, config);
-                alert('Film GÃ¼ncellendi!');
+                alert('Film Güncellendi!');
             } else {
                 // EKLEME (POST)
                 await axios.post(`${API_URL}/api/admin/movies`, formData, config);
                 alert('Film Eklendi!');
             }
 
-            // BaÅŸarÄ±lÄ± iÅŸlem sonrasÄ± temizlik
+            // Başarılı işlem sonrası temizlik
             handleCancelEdit();
             fetchData(token);
         } catch (err) {
-            alert('Ä°ÅŸlem HatasÄ±: ' + (err.response?.data?.message || err.message));
+            alert('İşlem Hatası: ' + (err.response?.data?.message || err.message));
         }
     };
 
     const handleDeleteMovie = async (id) => {
-        if (!confirm('Bu filmi silmek istediÄŸinize emin misiniz?')) return;
+        if (!confirm('Bu filmi silmek istediğinize emin misiniz?')) return;
         const token = localStorage.getItem('token');
         try {
             await axios.delete(`${API_URL}/api/admin/movies/${id}`, {
@@ -100,7 +100,7 @@ export default function Admin() {
             });
             fetchData(token);
         } catch (err) {
-            alert('Silme HatasÄ±: ' + err.message);
+            alert('Silme Hatası: ' + err.message);
         }
     };
 
@@ -148,7 +148,6 @@ export default function Admin() {
         }
     };
 
-
     const handleLogout = () => {
         localStorage.removeItem('token');
         navigate('/login');
@@ -160,25 +159,25 @@ export default function Admin() {
             <aside className="w-64 bg-gray-800 p-6 flex flex-col border-r border-gray-700">
                 <h2 className="text-2xl font-bold text-red-500 mb-10 tracking-wider">CMS PANEL</h2>
                 <nav className="flex flex-col gap-4 flex-1">
-                    <a href="#" className="text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded transition">ðŸ“Š Dashboard</a>
-                    <a href="#" className="text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded transition">ðŸŽ¬ Film YÃ¶netimi</a>
-                    <a href="#" className="text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded transition">ðŸŽ« Biletler</a>
+                    <a href="#" className="text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded transition">📊 Dashboard</a>
+                    <a href="#" className="text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded transition">🎬 Film Yönetimi</a>
+                    <a href="#" className="text-gray-300 hover:text-white hover:bg-gray-700 p-3 rounded transition">🎫 Biletler</a>
                 </nav>
-                <button onClick={handleLogout} className="mt-auto bg-red-600 hover:bg-red-700 text-white p-3 rounded transition">Ã‡IKIÅž YAP</button>
+                <button onClick={handleLogout} className="mt-auto bg-red-600 hover:bg-red-700 text-white p-3 rounded transition">ÇIKIŞ YAP</button>
             </aside>
 
             {/* Main Content */}
             <main className="flex-1 p-10 overflow-y-auto">
-                <h1 className="text-3xl font-bold mb-8">YÃ¶netim Paneli</h1>
+                <h1 className="text-3xl font-bold mb-8">Yönetim Paneli</h1>
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg">
-                        <h3 className="text-gray-400 text-sm uppercase font-bold mb-2">Toplam HasÄ±lat</h3>
+                        <h3 className="text-gray-400 text-sm uppercase font-bold mb-2">Toplam Hasılat</h3>
                         <p className="text-4xl font-bold text-green-400">{parseFloat(stats.totalIncome).toLocaleString()} TL</p>
                     </div>
                     <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg">
-                        <h3 className="text-gray-400 text-sm uppercase font-bold mb-2">SatÄ±lan Bilet</h3>
+                        <h3 className="text-gray-400 text-sm uppercase font-bold mb-2">Satılan Bilet</h3>
                         <p className="text-4xl font-bold text-blue-400">{stats.totalTickets}</p>
                     </div>
                     <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg">
@@ -196,11 +195,11 @@ export default function Admin() {
                     >
                         {backupLoading ? (
                             <>
-                                <span className="animate-spin text-xl">â†»</span> Yedekleniyor...
+                                <span className="animate-spin text-xl">↻</span> Yedekleniyor...
                             </>
                         ) : (
                             <>
-                                <span className="text-xl">ðŸ’¾</span> VERÄ°TABANINI YEDEKLE
+                                <span className="text-xl">💾</span> VERİTABANINI YEDEKLE
                             </>
                         )}
                     </button>
@@ -210,25 +209,25 @@ export default function Admin() {
                     {/* Add/Edit Movie Form */}
                     <div className="bg-gray-800 p-8 rounded-xl border border-gray-700">
                         <h3 className="text-xl font-bold mb-6 border-b border-gray-700 pb-2">
-                            {editingMovie ? 'Filmi DÃ¼zenle' : 'Yeni Film Ekle'}
+                            {editingMovie ? 'Filmi Düzenle' : 'Yeni Film Ekle'}
                         </h3>
                         <form onSubmit={handleSubmit} className="space-y-4">
-                            <input type="text" name="title" placeholder="Film AdÄ±" value={formData.title} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none" required />
-                            <input type="text" name="poster_url" placeholder="AfiÅŸ URL" value={formData.poster_url} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none" required />
+                            <input type="text" name="title" placeholder="Film Adı" value={formData.title} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none" required />
+                            <input type="text" name="poster_url" placeholder="Afiş URL" value={formData.poster_url} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none" required />
                             <div className="grid grid-cols-2 gap-4">
-                                <input type="number" name="duration_minutes" placeholder="SÃ¼re (dk)" value={formData.duration_minutes} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none" required />
-                                <input type="text" name="age_restriction" placeholder="YaÅŸ SÄ±nÄ±rÄ± (Ã¶rn: +13)" value={formData.age_restriction} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none" />
+                                <input type="number" name="duration_minutes" placeholder="Süre (dk)" value={formData.duration_minutes} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none" required />
+                                <input type="text" name="age_restriction" placeholder="Yaş Sınırı (örn: +13)" value={formData.age_restriction} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none" />
                             </div>
                             <input type="text" name="language" placeholder="Dil" value={formData.language} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none" required />
-                            <textarea name="description" placeholder="AÃ§Ä±klama" value={formData.description} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none h-24"></textarea>
+                            <textarea name="description" placeholder="Açıklama" value={formData.description} onChange={handleInputChange} className="w-full bg-gray-700 p-3 rounded border border-gray-600 focus:border-red-500 outline-none h-24"></textarea>
 
                             <div className="flex gap-4">
                                 <button type="submit" className={`flex-1 font-bold py-3 rounded transition ${editingMovie ? 'bg-blue-600 hover:bg-blue-700' : 'bg-red-600 hover:bg-red-700'}`}>
-                                    {editingMovie ? 'GÃœNCELLE' : 'KAYDET'}
+                                    {editingMovie ? 'GÜNCELLE' : 'KAYDET'}
                                 </button>
                                 {editingMovie && (
                                     <button type="button" onClick={handleCancelEdit} className="px-6 py-3 bg-gray-600 hover:bg-gray-500 rounded font-bold transition">
-                                        Ä°PTAL
+                                        İPTAL
                                     </button>
                                 )}
                             </div>
@@ -249,7 +248,7 @@ export default function Admin() {
                                         </div>
                                     </div>
                                     <div className="flex gap-2">
-                                        <button onClick={() => handleEditClick(movie)} className="bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white px-3 py-1 rounded text-sm transition">DÃ¼zenle</button>
+                                        <button onClick={() => handleEditClick(movie)} className="bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white px-3 py-1 rounded text-sm transition">Düzenle</button>
                                         <button onClick={() => handleDeleteMovie(movie.movie_id)} className="bg-red-500/20 text-red-500 hover:bg-red-500 hover:text-white px-3 py-1 rounded text-sm transition">Sil</button>
                                     </div>
                                 </div>
