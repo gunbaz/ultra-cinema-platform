@@ -1,105 +1,154 @@
 # 🎬 ULTRA CINEMA PLATFORM
 
-> **Üniversite Veritabanı Yönetim Sistemleri Dersi İçin Geliştirilmiş, Full Stack Sinema Rezervasyon ve Yönetim Sistemi.**
+> **Ankara Üniversitesi - Veritabanı Yönetim Sistemleri Dersi Projesi**
+> 
+> Full Stack Sinema Rezervasyon ve Yönetim Sistemi
 
-![Project Status](https://img.shields.io/badge/Status-Major%20Update-blue)
-
+![Project Status](https://img.shields.io/badge/Status-Completed-success)
 ![Tech Stack](https://img.shields.io/badge/Stack-PERN-blue)
-
 ![Database](https://img.shields.io/badge/Database-PostgreSQL-336791)
-
 ![Security](https://img.shields.io/badge/Security-JWT%20%26%20RBAC-red)
-
-## 📌 Proje Hakkında
-
-**Ultra Cinema Platform**, modern web teknolojileri kullanılarak geliştirilmiş, ölçeklenebilir ve güvenli bir bilet rezervasyon sistemidir. Sıradan bir rezervasyon sisteminin ötesine geçerek; **entegre cüzdan sistemi**, **büfe satış modülü**, **otomatik veritabanı yedekleme** ve **gelişmiş rol tabanlı güvenlik (RBAC)** gibi ticari özellikler barındırır.
-
-Veritabanı mimarisi **3. Normal Form (3NF)** kurallarına tam uyumlu tasarlanmış olup, veri bütünlüğü (Data Integrity) ve ACID prensipleri ön planda tutulmuştur.
-
-## 🚀 Öne Çıkan Özellikler
-
-### 🔐 Kimlik ve Güvenlik (YENİ)
-
-* **Kullanıcı Sistemi:** Ziyaretçiler kayıt olabilir, giriş yapabilir ve kendi profillerini yönetebilir.
-
-* **RBAC (Role-Based Access Control):** Gelişmiş yetkilendirme sistemi.
-
-    * **Super Admin:** Yönetim paneline tam erişim sağlar.
-
-    * **Müşteri:** Sadece arayüzü kullanabilir, admin paneline erişimi engellenir.
-
-* **Route Guards:** Yetkisiz kullanıcıların URL üzerinden korumalı sayfalara (Admin Dashboard vb.) erişmesi engellenir.
-
-### ⭐ Yorum ve Puanlama Sistemi (YENİ)
-
-* **Doğrulanmış İnceleme:** Sadece ilgili filme **bilet almış kullanıcılar** yorum yapabilir ve puan verebilir. (Fake yorum engelleme).
-
-* **Görsel Puanlama:** Filmlerin ortalama puanı, dinamik yıldız bileşeni ile (örn: 3.5 puan yarım yıldız) gösterilir.
-
-### 🍿 Büfe ve Ek Satış (YENİ)
-
-* **Ürün Entegrasyonu:** Bilet alırken Mısır, Kola gibi büfe ürünleri sepete eklenebilir.
-
-* **Akıllı Sepet Kontrolü:** "Bilet olmadan sadece mısır alınamaz" gibi ticari kurallar (Business Logic) kodlanmıştır.
-
-### 💰 Finansal Sistem & Cüzdan
-
-* **Dijital Cüzdan:** Her kullanıcının veritabanında "Transaction" mantığıyla çalışan şahsi bir cüzdanı vardır.
-
-* **Dinamik Fiyatlandırma (%10 İndirim):** Cüzdan ile yapılan ödemelerde (Bilet + Büfe) sistem otomatik indirim uygular.
-
-* **İşlem Geçmişi (Logs):** Para yükleme ve harcama işlemleri `wallet_transactions` tablosunda kayıt altına alınır.
-
-### 🛡️ Veri Koruma ve Otomasyon
-
-* **Otomatik Yedekleme (Cron Job):** Sistem, arka planda her gece veritabanının yedeğini (`.sql`) sunucuya kaydeder.
-
-* **Manuel Yedekleme:** Admin panelinden tek tıkla anlık veritabanı yedeği alınabilir.
-
-### ⚡ Yönetim Paneli (Admin Dashboard)
-
-* **İstatistikler:** Hasılat, bilet sayısı ve aktif film sayısı anlık görüntülenir.
-
-* **CRUD İşlemleri:** Film ekleme, silme, düzenleme ve vizyon tarihi yönetimi.
 
 ---
 
-## 🛠️ Teknoloji Yığını (Tech Stack)
+## 📌 Proje Hakkında
 
-| Alan | Teknoloji | Açıklama |
-| :--- | :--- | :--- |
-| **Frontend** | React.js (Vite) | Modern, hızlı ve reaktif arayüz. |
-| **Styling** | Tailwind CSS | Netflix tarzı "Dark Mode" tasarım dili. |
-| **Backend** | Node.js & Express | RESTful API mimarisi. |
-| **Database** | PostgreSQL | İlişkisel veritabanı (Relational DB). |
-| **Security** | JWT & Bcrypt | Kimlik doğrulama ve şifreleme. |
-| **Tools** | Node-Cron & pg_dump | Otomasyon ve Yedekleme araçları. |
+**Ultra Cinema Platform**, modern web teknolojileri kullanılarak geliştirilmiş, ölçeklenebilir ve güvenli bir sinema bilet rezervasyon sistemidir. 
+
+Proje, sıradan bir rezervasyon sisteminin ötesine geçerek; **entegre cüzdan sistemi**, **büfe satış modülü**, **veritabanı yedekleme** ve **gelişmiş rol tabanlı güvenlik (RBAC)** gibi kurumsal özellikler barındırır.
+
+Veritabanı mimarisi **3. Normal Form (3NF)** kurallarına uygun tasarlanmış olup, veri bütünlüğü ve **ACID** prensipleri ön planda tutulmuştur.
+
+---
+
+## 📸 Ekran Görüntüleri
+
+<details>
+<summary><b>🏠 Ana Sayfa</b></summary>
+<br>
+<!-- Ekran görüntüsü eklenecek -->
+<i>Vizyondaki filmler ve modern arayüz</i>
+</details>
+
+<details>
+<summary><b>🎫 Koltuk Seçimi</b></summary>
+<br>
+<!-- Ekran görüntüsü eklenecek -->
+<i>İnteraktif salon haritası ve koltuk seçim ekranı</i>
+</details>
+
+<details>
+<summary><b>💰 Cüzdan Sistemi</b></summary>
+<br>
+<!-- Ekran görüntüsü eklenecek -->
+<i>Bakiye yükleme ve işlem geçmişi</i>
+</details>
+
+<details>
+<summary><b>🛡️ Admin Paneli</b></summary>
+<br>
+<!-- Ekran görüntüsü eklenecek -->
+<i>Yönetim paneli - istatistikler ve film yönetimi</i>
+</details>
+
+---
+
+## 🚀 Öne Çıkan Özellikler
+
+### 🔐 Kimlik Doğrulama ve Güvenlik
+- **JWT Tabanlı Auth:** Güvenli oturum yönetimi
+- **RBAC (Role-Based Access Control):** Rol tabanlı yetkilendirme
+  - `Super Admin` → Yönetim paneline tam erişim
+  - `Müşteri` → Sadece kullanıcı arayüzü erişimi
+- **Route Guards:** Yetkisiz erişim engelleme
+
+### ⭐ Yorum ve Puanlama Sistemi
+- **Doğrulanmış İnceleme:** Sadece bilet almış kullanıcılar yorum yapabilir
+- **Dinamik Yıldız Gösterimi:** Ortalama puan görsel olarak yansıtılır
+
+### 🍿 Büfe ve Ek Satış Modülü
+- **Ürün Entegrasyonu:** Bilet alırken büfe ürünleri sepete eklenebilir
+- **İş Kuralları:** "Bilet olmadan sadece mısır alınamaz" gibi kontroller
+
+### 💰 Cüzdan ve Finansal Sistem
+- **Dijital Cüzdan:** Transaction mantığıyla çalışan kullanıcı cüzdanları
+- **%10 İndirim:** Cüzdan ile ödemelerde otomatik indirim
+- **İşlem Geçmişi:** Tüm finansal hareketler `wallet_transactions` tablosunda
+
+### 🛡️ Veri Koruma
+- **Manuel Yedekleme:** Admin panelinden tek tıkla `.sql` formatında yedek indirme
+- **Cloud Uyumlu:** Render.com gibi platformlarda çalışacak şekilde tasarlandı
+
+### ⚡ Admin Dashboard
+- **Anlık İstatistikler:** Toplam hasılat, satılan bilet, aktif film sayısı
+- **Film CRUD:** Ekleme, düzenleme, silme işlemleri
+- **Veritabanı Yedekleme:** Tek tıkla SQL export
+
+---
+
+## 🛠️ Teknoloji Yığını
+
+| Katman | Teknoloji | Açıklama |
+|:-------|:----------|:---------|
+| **Frontend** | React.js (Vite) | Modern ve hızlı SPA |
+| **Styling** | Tailwind CSS | Dark mode tasarım |
+| **Backend** | Node.js & Express | RESTful API |
+| **Database** | PostgreSQL | İlişkisel veritabanı |
+| **Auth** | JWT & Bcrypt | Kimlik doğrulama ve şifreleme |
+| **Tools** | Node-Cron | Otomasyon |
 
 ---
 
 ## 🗄️ Veritabanı Mimarisi
 
-Veritabanı **PostgreSQL** üzerinde kurgulanmış olup, aşağıdaki temel tabloları ve ilişkileri içerir:
+### ER Diyagramı
 
-1.  **Users & Roles:** Yetkilendirme sistemi (1: Admin, 2: Müşteri).
+```
+┌─────────┐     ┌─────────┐     ┌─────────────────┐     ┌──────────┐
+│  Roles  │────▶│  Users  │────▶│     Wallets     │────▶│Wallet_Tx │
+└─────────┘     └────┬────┘     └─────────────────┘     └──────────┘
+                     │
+        ┌────────────┼────────────┬─────────────┐
+        ▼            ▼            ▼             ▼
+   ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌──────────┐
+   │ Tickets │  │ Reviews │  │  Sales  │  │  Admins  │
+   └────┬────┘  └────┬────┘  └────┬────┘  └──────────┘
+        │            │            │
+        ▼            ▼            ▼
+   ┌─────────┐  ┌─────────┐  ┌──────────┐
+   │Sessions │  │ Movies  │  │ Products │
+   └────┬────┘  └─────────┘  └──────────┘
+        │
+   ┌────┴────┐
+   ▼         ▼
+┌──────┐ ┌───────┐
+│Halls │ │ Seats │
+└──┬───┘ └───────┘
+   │
+   ▼
+┌─────────┐     ┌────────┐
+│ Cinemas │────▶│ Cities │
+└─────────┘     └────────┘
+```
 
-2.  **Movies & Sessions:** Film ve seans bilgileri (1-N İlişki).
+### Tablolar (22 Adet)
 
-3.  **Halls & Seats:** Salon ve koltuk haritası.
-
-4.  **Tickets & Sales:** Bilet ve ürün satış kayıtları.
-
-5.  **Wallets & Transactions:** Finansal kayıtlar.
-
-6.  **Reviews:** Kullanıcı yorumları ve puanları.
-
-7.  **Products:** Büfe ürünleri stoğu.
+| Kategori | Tablolar |
+|:---------|:---------|
+| **Kullanıcı** | users, roles, wallets, wallet_transactions |
+| **Film** | movies, genres, directors, actors, movie_genres, movie_directors, movie_actors |
+| **Mekan** | cities, cinemas, halls, seats, seattypes |
+| **İşlem** | sessions, tickets, reviews, sales, products |
 
 ---
 
-## ⚙️ Kurulum (Localhost)
+## ⚙️ Kurulum
 
-Projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımları izleyin:
+### Gereksinimler
+
+- Node.js (v18+)
+- PostgreSQL (v14+)
+- npm veya yarn
 
 ### 1. Projeyi Klonlayın
 
@@ -110,56 +159,120 @@ cd ultra-cinema-platform
 
 ### 2. Bağımlılıkları Yükleyin
 
-Hem Backend hem Frontend klasörlerinde kütüphaneleri yükleyin:
-
 ```bash
-# Backend için
+# Backend
 cd backend
 npm install
 
-# Frontend için (Yeni terminalde)
+# Frontend (yeni terminal)
 cd frontend
 npm install
 ```
 
-### 3. Veritabanını Hazırlayın (PostgreSQL)
+### 3. Veritabanını Kurun
 
-PostgreSQL'de `CinemaDB` adında bir veritabanı oluşturun.
+1. PostgreSQL'de `CinemaDB` adında veritabanı oluşturun:
 
-`backend/backups` klasöründeki en güncel `.sql` dosyasını DBeaver veya pgAdmin ile import edin (Restore).
+```sql
+CREATE DATABASE CinemaDB;
+```
 
-Bu işlem tüm tabloları, verileri ve rolleri otomatik kuracaktır.
+2. `backend/backups/` klasöründeki `.sql` dosyasını import edin:
 
-### 4. Çevre Değişkenlerini Ayarlayın (.env)
+```bash
+psql -U postgres -d CinemaDB -f backend/backups/backup_latest.sql
+```
 
-`backend` klasöründe `.env` dosyası oluşturun ve bilgilerinizi girin:
+Ya da **DBeaver/pgAdmin** ile "Restore" yapın.
+
+### 4. Ortam Değişkenlerini Ayarlayın
+
+`backend/.env` dosyası oluşturun:
 
 ```env
 DB_USER=postgres
-DB_PASSWORD=sifreniz
+DB_PASSWORD=your_password
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=CinemaDB
-JWT_SECRET=gizli_anahtar
+JWT_SECRET=your_secret_key
 ```
 
 ### 5. Uygulamayı Başlatın
 
 **Backend:**
-
 ```bash
+cd backend
 npm run dev
-# Server 5000 portunda çalışacak ve otomatik yedekleme servisi başlayacaktır.
+# http://localhost:5000
 ```
 
 **Frontend:**
-
 ```bash
+cd frontend
 npm run dev
-# Localhost:5173 adresinden siteye erişebilirsiniz.
+# http://localhost:5173
 ```
+
+
+---
+
+## 📁 Proje Yapısı
+
+```
+ultra-cinema-platform/
+├── backend/
+│   ├── backups/          # Veritabanı yedekleri
+│   ├── server.js         # Ana sunucu dosyası
+│   ├── .env              # Ortam değişkenleri
+│   └── package.json
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/   # React bileşenleri
+│   │   ├── pages/        # Sayfa bileşenleri
+│   │   ├── context/      # Auth context
+│   │   └── config/       # API yapılandırması
+│   └── package.json
+│
+└── README.md
+```
+
+---
+
+## 🎯 API Endpoints
+
+| Method | Endpoint | Açıklama |
+|:-------|:---------|:---------|
+| POST | `/api/auth/register` | Kullanıcı kaydı |
+| POST | `/api/auth/login` | Giriş |
+| GET | `/api/movies` | Film listesi |
+| GET | `/api/movies/:id` | Film detayı |
+| GET | `/api/movies/:id/reviews` | Film yorumları |
+| POST | `/api/reviews` | Yorum ekle |
+| GET | `/api/wallet/:userId` | Cüzdan bilgisi |
+| POST | `/api/wallet/deposit` | Bakiye yükle |
+| POST | `/api/tickets/buy-with-wallet` | Bilet satın al |
+| GET | `/api/admin/stats` | Admin istatistikleri |
+| GET | `/api/admin/backup` | Veritabanı yedeği indir |
+
+---
 
 ## 👥 Proje Ekibi
 
-* **Furkan Günbaz** - Full Stack Developer & Database Architect
-* **Enes Cabbar Akça** - Full Stack Developer & Database Architect
+| İsim | Rol |
+|:-----|:----|
+| **Furkan Günbaz** | Full Stack Developer & Database Architect |
+| **Enes Cabbar Akça** | Full Stack Developer & Database Architect |
+
+---
+
+## 📄 Lisans
+
+Bu proje eğitim amaçlı geliştirilmiştir.
+
+---
+
+<p align="center">
+  <b>Ankara Üniversitesi - Veritabanı Yönetim Sistemleri Dersi - 2025</b>
+</p>
